@@ -1,0 +1,45 @@
+<script src="wrap-first-last-word.js" defer></script>
+
+<style type="text/css">
+    .js-first-word {
+        border: 1px solid;
+        color: teal;
+    }
+
+    .js-last-word {
+        border: 1px solid;
+        color: orchid;
+    }
+</style>
+
+<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+    <style type="text/css">
+        .distraction {
+            background: red;
+        }
+    </style>
+    <!-- another distraction -->
+    <b>"Find me."</b>
+</div>
+
+<span class="js-wrap-first-last-word --js-wrap-first --js-wrap-last"
+    >Simple case</span
+>
+
+<span class="js-wrap-first-last-word --js-wrap-first --js-wrap-last"
+    >Tricky <i>case</i>.</span
+>
+
+<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+    <style type="text/css">
+        .distraction {
+            background: red;
+        }
+    </style>
+    <!-- another distraction -->
+    Even trickier case.
+</div>
+
+<div class="js-wrap-first-last-word">
+    <!-- Failure case -->
+</div>
