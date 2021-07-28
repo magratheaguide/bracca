@@ -12,34 +12,82 @@
     }
 </style>
 
+<span class="js-wrap-first-last-word --js-wrap-first --js-wrap-last"
+    >Contains text only</span
+>
+
+<span class="js-wrap-first-last-word --js-wrap-first --js-wrap-last"
+    >"Contains start and end punctuation."</span
+>
+
+<span class="js-wrap-first-last-word --js-wrap-first --js-wrap-last"
+    >Contains <i>sibling</i> elements</span
+>
+
 <div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
-    <style type="text/css">
-        .distraction {
-            background: red;
-        }
-    </style>
-    <!-- another distraction -->
-    <b>"Find me."</b>
+    Contains extra whitespace
 </div>
 
-<span class="js-wrap-first-last-word --js-wrap-first --js-wrap-last"
-    >Simple case</span
->
-
-<span class="js-wrap-first-last-word --js-wrap-first --js-wrap-last"
-    >Tricky <i>case</i>.</span
->
+<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+    <!-- starting distraction! -->
+    Leading and trailing comments
+    <!-- ending distraction! -->
+</div>
 
 <div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
     <style type="text/css">
-        .distraction {
+        .distraction-start {
             background: red;
         }
     </style>
-    <!-- another distraction -->
-    Even trickier case.
+    Leading and trailing styles
+    <style type="text/css">
+        .distraction-end {
+            background: red;
+        }
+    </style>
+</div>
+
+<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+    <b>Content fully contained in nested element</b>
+</div>
+
+<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+    <b>Content partially</b> contained in <b>nested elements</b>
+</div>
+
+<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+    <style type="text/css">
+        .distraction-start {
+            background: red;
+        }
+    </style>
+    <!-- starting distraction! -->
+    <b>"Nested styles, comments, and containing elements."</b>
+    <!-- ending distraction! -->
+    <style type="text/css">
+        .distraction-end {
+            background: red;
+        }
+    </style>
+</div>
+
+<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+    <style type="text/css">
+        .distraction-start {
+            background: red;
+        }
+    </style>
+    <!-- starting distraction! -->
+    Nested styles and comments. Bare text.
+    <!-- ending distraction! -->
+    <style type="text/css">
+        .distraction-end {
+            background: red;
+        }
+    </style>
 </div>
 
 <div class="js-wrap-first-last-word">
-    <!-- Failure case -->
+    <!-- Warning case, no content -->
 </div>
