@@ -23,10 +23,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     for (const TARGET of TARGETS) {
         const COPYABLE_TEXT = TARGET.innerText;
 
-        // let directParent = findDirectParent(TARGET, COPYABLE_TEXT);
-        // console.log("direct parent =");
-        // console.log(directParent);
-
         findTextNode(
             findDirectParent(TARGET, COPYABLE_TEXT),
             TARGET.classList.contains(TRIGGER_MODIFIER_FIRST),
@@ -35,33 +31,22 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     }
 
     function findDirectParent(parent, searchFor) {
-        // console.log("parent = ");
-        // console.log(parent);
-        // console.log(parent.childNodes);
-
         // prefer nodeName over nodeType for readability
         if (
             parent.childNodes.length === 1 &&
             parent.firstChild.nodeName === "#text"
         ) {
-            // console.log("returning =");
-            // console.log(parent);
             return parent;
         }
 
-        // console.log("searchFor =");
-        // console.log(searchFor);
         for (const CHILD of parent.childNodes) {
-            // console.log("CHILD.innerText =");
-            // console.log(CHILD.innerText);
-
             if (CHILD.innerText === searchFor) {
                 // console.log("starting another loop");
                 return findDirectParent(CHILD, searchFor);
             }
         }
 
-        // console.log("first parent is direct parent");
+        // initial parent *is* direct parent
         return parent;
     }
 
@@ -78,10 +63,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
         if (targetNode) {
             let parts = targetNode.nodeValue.trim().split(/\s+/);
-
-            console.log(targetNode);
-            console.log(parts);
-            console.log(parent.innerHTML);
 
             if (wrapFirstRequested) {
                 injectWrapper(parent, APPLY_CLASS_FIRST, parts.shift());
