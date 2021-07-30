@@ -21,67 +21,68 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     const TARGETS = document.getElementsByClassName(TRIGGER_CLASS);
 
     for (const TARGET of TARGETS) {
-        const COPYABLE_TEXT = TARGET.innerText;
+        const viewableContent = TARGET.innerText;
 
-        findTextNode(
-            findDirectParent(TARGET, COPYABLE_TEXT),
-            TARGET.classList.contains(TRIGGER_MODIFIER_FIRST),
-            TARGET.classList.contains(TRIGGER_MODIFIER_LAST)
-        );
-    }
+        if (/\S/.test(viewableContent)) {
+            const parts = viewableContent.trim().split(/\s+/);
+            const firstWord = parts.shift();
+            const lastWord = parts.pop();
 
-    function findDirectParent(parent, searchFor) {
-        // prefer nodeName over nodeType for readability
-        if (
-            parent.childNodes.length === 1 &&
-            parent.firstChild.nodeName === "#text"
-        ) {
-            return parent;
-        }
+            let firstNode = findContainingNode(TARGET, firstWord, true);
+            console.info("firstNode = %o", firstNode);
+            let lastNode = findContainingNode(TARGET, lastWord, false);
+            console.info("lastNode = %o", lastNode);
 
-        for (const CHILD of parent.childNodes) {
-            if (CHILD.innerText === searchFor) {
-                // console.log("starting another loop");
-                return findDirectParent(CHILD, searchFor);
-            }
-        }
-
-        // initial parent *is* direct parent
-        return parent;
-    }
-
-    function findTextNode(parent, wrapFirstRequested, wrapLastRequested) {
-        let targetNode;
-
-        for (const CHILD of parent.childNodes) {
-            // find the first child node that contains something other than whitespace
-            if (CHILD.nodeName === "#text" && /\S/.test(CHILD.nodeValue)) {
-                targetNode = CHILD;
-                break;
-            }
-        }
-
-        if (targetNode) {
-            let parts = targetNode.nodeValue.trim().split(/\s+/);
-
-            if (wrapFirstRequested) {
-                injectWrapper(parent, APPLY_CLASS_FIRST, parts.shift());
-            }
-
-            if (wrapLastRequested) {
-                injectWrapper(parent, APPLY_CLASS_LAST, parts.pop());
-            }
+            // injectWrapper(firstNode, APPLY_CLASS_FIRST, firstWord);
+            injectWrapper(lastNode, APPLY_CLASS_LAST, lastWord);
         } else {
-            console.warn(
-                "Text node with content other than whitespace could not be found in targeted element: %o",
-                parent
-            );
+            console.warn("No visible content in targeted element %o", TARGET);
         }
     }
 
-    function injectWrapper(parent, className, content) {
-        const contentWrapped = `<span class="${className}">${content}</span>`;
+    function findContainingNode(parent, searchFor, isForwardSearch = true) {
+        let childNodes = Array.from(parent.childNodes);
 
-        parent.innerHTML = parent.innerHTML.replace(content, contentWrapped);
+        if (!isForwardSearch) {
+            childNodes.reverse();
+        }
+
+        for (const child of childNodes) {
+            const searchForRegExp = new RegExp(searchFor);
+
+            if (
+                searchForRegExp.test(child.nodeValue) ||
+                searchForRegExp.test(child.innerText)
+            ) {
+                // prefer nodeName over nodeType for readability
+                if (child.nodeName === "#text") {
+                    return child;
+                } else {
+                    return findContainingNode(child, searchFor);
+                }
+            }
+        }
+
+        return;
+    }
+
+    function injectWrapper(node, className, content) {
+        /*
+        lots of helpful technique advice for this bit:
+        https://stackoverflow.com/questions/16662393/insert-html-into-text-node-with-javascript#29301739
+        */
+
+        // TODO: currently only works for wrap first word, even if wrapping last
+
+        const contentWrapped = `<span class="${className}">${content}</span>`;
+        const newNodeValue = node.nodeValue.replace(content, contentWrapped);
+        console.debug("newNodeValue = %o", newNodeValue);
+        const tempElement = document.createElement("div");
+
+        node.parentNode.insertBefore(tempElement, node);
+        tempElement.insertAdjacentHTML("afterend", newNodeValue);
+
+        tempElement.remove();
+        node.remove();
     }
 })();
