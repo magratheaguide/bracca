@@ -29,12 +29,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             const lastWord = parts.pop();
 
             let firstNode = findContainingNode(TARGET, firstWord, true);
-            console.info("firstNode = %o", firstNode);
-            let lastNode = findContainingNode(TARGET, lastWord, false);
-            console.info("lastNode = %o", lastNode);
+            injectWrapper(firstNode, APPLY_CLASS_FIRST, firstWord, "first");
 
-            // injectWrapper(firstNode, APPLY_CLASS_FIRST, firstWord);
-            injectWrapper(lastNode, APPLY_CLASS_LAST, lastWord);
+            let lastNode = findContainingNode(TARGET, lastWord, false);
+            injectWrapper(lastNode, APPLY_CLASS_LAST, lastWord, "last");
         } else {
             console.warn("No visible content in targeted element %o", TARGET);
         }
@@ -66,17 +64,32 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         return;
     }
 
-    function injectWrapper(node, className, content) {
+    function injectWrapper(node, className, content, position) {
         /*
         lots of helpful technique advice for this bit:
         https://stackoverflow.com/questions/16662393/insert-html-into-text-node-with-javascript#29301739
         */
 
-        // TODO: currently only works for wrap first word, even if wrapping last
-
         const contentWrapped = `<span class="${className}">${content}</span>`;
-        const newNodeValue = node.nodeValue.replace(content, contentWrapped);
-        console.debug("newNodeValue = %o", newNodeValue);
+        let newNodeValue;
+
+        switch (position) {
+            case "first":
+                newNodeValue = node.nodeValue.replace(content, contentWrapped);
+                break;
+            case "last":
+                const index = node.nodeValue.lastIndexOf(content);
+                const valueStart = node.nodeValue.substring(0, index);
+                let valueEnd = node.nodeValue.substring(index);
+
+                valueEnd = valueEnd.replace(content, contentWrapped);
+                newNodeValue = valueStart + valueEnd;
+
+                break;
+            default:
+                console.error("invalid position provided ot injectWrapper()");
+        }
+
         const tempElement = document.createElement("div");
 
         node.parentNode.insertBefore(tempElement, node);
