@@ -1,100 +1,112 @@
-<script src="wrap-first-last-word.js" defer></script>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
 
-<style type="text/css">
-    .js-first-word {
-        border: 1px solid;
-        color: teal;
-    }
+        <script src="wrap-first-last-word.js" defer></script>
 
-    .js-last-word {
-        border: 1px solid;
-        color: orchid;
-    }
-</style>
+        <style type="text/css">
+            .js-first-word {
+                border: 1px solid;
+                color: teal;
+            }
 
-<span class="js-wrap-first-last-word --js-wrap-first --js-wrap-last"
-    >Contains text only</span
->
+            .js-last-word {
+                border: 1px solid;
+                color: orchid;
+            }
+        </style>
+    </head>
+    <body>
+        <span class="js-wrap-first-last-word --js-wrap-first --js-wrap-last"
+            >Contains text only</span
+        >
 
-<span class="js-wrap-first-last-word --js-wrap-first --js-wrap-last"
-    >"Contains start and end punctuation."</span
->
+        <span class="js-wrap-first-last-word --js-wrap-first --js-wrap-last"
+            >"Contains start and end punctuation."</span
+        >
 
-<span class="js-wrap-first-last-word --js-wrap-first --js-wrap-last"
-    >Contains <i>sibling</i> elements</span
->
+        <span class="js-wrap-first-last-word --js-wrap-first --js-wrap-last"
+            >Contains <i>sibling</i> elements</span
+        >
 
-<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
-    Contains extra whitespace
-</div>
+        <div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+            Contains extra whitespace
+        </div>
 
-<div class="js-wrap-first-last-word --js-wrap-first">First word only</div>
+        <div class="js-wrap-first-last-word --js-wrap-first">
+            First word only
+        </div>
 
-<div class="js-wrap-first-last-word --js-wrap-last">Last word only</div>
+        <div class="js-wrap-first-last-word --js-wrap-last">Last word only</div>
 
-<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
-    <!-- starting distraction! -->
-    Leading and trailing comments
-    <!-- ending distraction! -->
-</div>
+        <div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+            <!-- starting distraction! -->
+            Leading and trailing comments
+            <!-- ending distraction! -->
+        </div>
 
-<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
-    <style type="text/css">
-        .distraction-start {
-            background: red;
-        }
-    </style>
-    Leading and trailing styles
-    <style type="text/css">
-        .distraction-end {
-            background: red;
-        }
-    </style>
-</div>
+        <div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+            <style type="text/css">
+                .distraction-start {
+                    background: red;
+                }
+            </style>
+            Leading and trailing styles
+            <style type="text/css">
+                .distraction-end {
+                    background: red;
+                }
+            </style>
+        </div>
 
-<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
-    <b>Content fully contained in nested element</b>
-</div>
+        <div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+            <b>Content fully contained in nested element</b>
+        </div>
 
-<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
-    <b>Content partially</b> contained in <b>nested elements</b>
-</div>
+        <div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+            <b>Content partially</b> contained in <b>nested elements</b>
+        </div>
 
-<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
-    <style type="text/css">
-        .distraction-start {
-            background: red;
-        }
-    </style>
-    <!-- starting distraction! -->
-    <b>"Nested styles, comments, and containing elements."</b>
-    <!-- ending distraction! -->
-    <style type="text/css">
-        .distraction-end {
-            background: red;
-        }
-    </style>
-</div>
+        <div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+            <style type="text/css">
+                .distraction-start {
+                    background: red;
+                }
+            </style>
+            <!-- starting distraction! -->
+            <b>"Nested styles, comments, and containing elements."</b>
+            <!-- ending distraction! -->
+            <style type="text/css">
+                .distraction-end {
+                    background: red;
+                }
+            </style>
+        </div>
 
-<div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
-    <style type="text/css">
-        .distraction-start {
-            background: red;
-        }
-    </style>
-    <!-- starting distraction! -->
-    Nested styles and comments. Bare text.
-    <!-- ending distraction! -->
-    <style type="text/css">
-        .distraction-end {
-            background: red;
-        }
-    </style>
-</div>
+        <div class="js-wrap-first-last-word --js-wrap-first --js-wrap-last">
+            <style type="text/css">
+                .distraction-start {
+                    background: red;
+                }
+            </style>
+            <!-- starting distraction! -->
+            Nested styles and comments. Bare text.
+            <!-- ending distraction! -->
+            <style type="text/css">
+                .distraction-end {
+                    background: red;
+                }
+            </style>
+        </div>
 
-<!-- make sure we don't get caught up on repeated words -->
-<div class="js-wrap-first-last-word --js-wrap-last">words words words</div>
+        <!-- make sure we don't get caught up on repeated words -->
+        <div class="js-wrap-first-last-word --js-wrap-last">
+            words words words
+        </div>
 
-<div class="js-wrap-first-last-word">
-    <!-- Warning case, no content -->
-</div>
+        <div class="js-wrap-first-last-word">
+            <!-- Warning case, no content -->
+        </div>
+    </body>
+</html>
