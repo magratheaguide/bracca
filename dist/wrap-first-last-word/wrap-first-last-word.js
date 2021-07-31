@@ -70,7 +70,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                     let mode = modes[selectedMode];
 
                     mode.configureWord(allWords);
-                    console.debug(mode);
 
                     let node = findContainingNode(
                         target,
