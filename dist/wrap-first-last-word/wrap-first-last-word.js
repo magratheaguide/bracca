@@ -28,13 +28,34 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             const firstWord = parts.shift();
             const lastWord = parts.pop();
 
-            let firstNode = findContainingNode(TARGET, firstWord, true);
-            injectWrapper(firstNode, APPLY_CLASS_FIRST, firstWord, "first");
+            if (TARGET.classList.contains(TRIGGER_MODIFIER_FIRST)) {
+                let firstNode = findContainingNode(TARGET, firstWord, true);
+                injectWrapper(firstNode, APPLY_CLASS_FIRST, firstWord, "first");
+            }
 
-            let lastNode = findContainingNode(TARGET, lastWord, false);
-            injectWrapper(lastNode, APPLY_CLASS_LAST, lastWord, "last");
+            if (TARGET.classList.contains(TRIGGER_MODIFIER_LAST)) {
+                let lastNode = findContainingNode(TARGET, lastWord, false);
+                injectWrapper(lastNode, APPLY_CLASS_LAST, lastWord, "last");
+            }
+
+            if (
+                !TARGET.classList.contains(TRIGGER_MODIFIER_FIRST) &&
+                !TARGET.classList.contains(TRIGGER_MODIFIER_LAST)
+            ) {
+                console.error(
+                    `Missing position modifier class on %o
+
+Must specify first and/or last word to be wrapped using "%s" or "%s" classes`,
+                    TARGET,
+                    APPLY_CLASS_FIRST,
+                    APPLY_CLASS_LAST
+                );
+            }
         } else {
-            console.warn("No visible content in targeted element %o", TARGET);
+            console.warn(
+                "No visible, non-whitespace content in targeted element %o",
+                TARGET
+            );
         }
     }
 
@@ -87,7 +108,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
                 break;
             default:
-                console.error("invalid position provided ot injectWrapper()");
+                console.error("invalid position provided to injectWrapper()");
         }
 
         const tempElement = document.createElement("div");
