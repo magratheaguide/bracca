@@ -10,59 +10,102 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+"use strict";
+
 (function () {
-    const APPLY_CLASS_FIRST = "js-first-word";
-    const APPLY_CLASS_LAST = "js-last-word";
+    class Mode {
+        constructor(index, wrapperClass) {
+            this.index = index;
+            this.wrapperClass = `${sharedWrapperClass} ${wrapperClass}`;
+        }
 
-    const TRIGGER_CLASS = "js-wrap-first-last-word";
-    const TRIGGER_MODIFIER_FIRST = "--js-wrap-first";
-    const TRIGGER_MODIFIER_LAST = "--js-wrap-last";
+        get isForwardSearching() {
+            return this._isForwardSearching;
+        }
 
-    const TARGETS = document.getElementsByClassName(TRIGGER_CLASS);
+        get word() {
+            return this._word;
+        }
 
-    for (const TARGET of TARGETS) {
-        const viewableContent = TARGET.innerText;
+        get wordWrapped() {
+            return this._wordWrapped;
+        }
+
+        configureWord(wordArray) {
+            if (this.index >= 0) {
+                this._word = wordArray[this.index];
+                this._isForwardSearching = true;
+            } else {
+                this._word = wordArray[wordArray.length + this.index];
+                this._isForwardSearching = false;
+            }
+            this._wordWrapped = this.wrapWord(this._word);
+        }
+
+        wrapWord(word) {
+            return `<span class="${this.wrapperClass}">${word}</span>`;
+        }
+    }
+
+    const triggerSelector = "[data-trigger-word-wrap]";
+    const triggerJs = "triggerWordWrap";
+
+    const targets = document.querySelectorAll(triggerSelector);
+
+    const sharedWrapperClass = "js-wrapped-word";
+    const modes = {
+        first: new Mode(0, "--first-word"),
+        last: new Mode(-1, "--last-word"),
+    };
+
+    for (const target of targets) {
+        const viewableContent = target.innerText;
 
         if (/\S/.test(viewableContent)) {
-            const parts = viewableContent.trim().split(/\s+/);
-            const firstWord = parts.shift();
-            const lastWord = parts.pop();
+            const allWords = viewableContent.trim().split(/\s+/);
+            const selectedModes = target.dataset[triggerJs].trim().split(/\s+/);
 
-            if (TARGET.classList.contains(TRIGGER_MODIFIER_FIRST)) {
-                let firstNode = findContainingNode(TARGET, firstWord, true);
-                injectWrapper(firstNode, APPLY_CLASS_FIRST, firstWord, "first");
-            }
+            for (const selectedMode of selectedModes) {
+                if (modes.hasOwnProperty(selectedMode)) {
+                    let mode = modes[selectedMode];
 
-            if (TARGET.classList.contains(TRIGGER_MODIFIER_LAST)) {
-                let lastNode = findContainingNode(TARGET, lastWord, false);
-                injectWrapper(lastNode, APPLY_CLASS_LAST, lastWord, "last");
-            }
+                    mode.configureWord(allWords);
+                    console.debug(mode);
 
-            if (
-                !TARGET.classList.contains(TRIGGER_MODIFIER_FIRST) &&
-                !TARGET.classList.contains(TRIGGER_MODIFIER_LAST)
-            ) {
-                console.error(
-                    `Missing position modifier class on %o
-
-Must specify first and/or last word to be wrapped using "%s" or "%s" classes`,
-                    TARGET,
-                    APPLY_CLASS_FIRST,
-                    APPLY_CLASS_LAST
-                );
+                    let node = findContainingNode(
+                        target,
+                        mode.word,
+                        mode.isForwardSearching
+                    );
+                    injectWrapper(
+                        node,
+                        mode.word,
+                        mode.wordWrapped,
+                        mode.isForwardSearching
+                    );
+                } else if (selectedMode === "") {
+                    console.error(
+                        `Found empty trigger on %o
+At least one mode must be specified, options are: %o`,
+                        target,
+                        Object.keys(modes)
+                    );
+                } else {
+                    console.error('Unsupported mode "%s" found', selectedMode);
+                }
             }
         } else {
             console.warn(
                 "No visible, non-whitespace content in targeted element %o",
-                TARGET
+                target
             );
         }
     }
 
-    function findContainingNode(parent, searchFor, isForwardSearch = true) {
+    function findContainingNode(parent, searchFor, isForwardSearching) {
         let childNodes = Array.from(parent.childNodes);
 
-        if (!isForwardSearch) {
+        if (!isForwardSearching) {
             childNodes.reverse();
         }
 
@@ -85,30 +128,23 @@ Must specify first and/or last word to be wrapped using "%s" or "%s" classes`,
         return;
     }
 
-    function injectWrapper(node, className, content, position) {
+    function injectWrapper(node, word, wordWrapped, isForwardSearching) {
         /*
         lots of helpful technique advice for this bit:
         https://stackoverflow.com/questions/16662393/insert-html-into-text-node-with-javascript#29301739
         */
 
-        const contentWrapped = `<span class="${className}">${content}</span>`;
         let newNodeValue;
 
-        switch (position) {
-            case "first":
-                newNodeValue = node.nodeValue.replace(content, contentWrapped);
-                break;
-            case "last":
-                const index = node.nodeValue.lastIndexOf(content);
-                const valueStart = node.nodeValue.substring(0, index);
-                let valueEnd = node.nodeValue.substring(index);
+        if (isForwardSearching) {
+            newNodeValue = node.nodeValue.replace(word, wordWrapped);
+        } else {
+            const index = node.nodeValue.lastIndexOf(word);
+            const valueStart = node.nodeValue.substring(0, index);
+            let valueEnd = node.nodeValue.substring(index);
 
-                valueEnd = valueEnd.replace(content, contentWrapped);
-                newNodeValue = valueStart + valueEnd;
-
-                break;
-            default:
-                console.error("invalid position provided to injectWrapper()");
+            valueEnd = valueEnd.replace(word, wordWrapped);
+            newNodeValue = valueStart + valueEnd;
         }
 
         const tempElement = document.createElement("div");
