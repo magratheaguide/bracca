@@ -36,3 +36,7 @@ The following CSS would then cause that first word ("This") to have a pink backg
 ```
 
 Note that all word wrappers share a common class and then have additional modifier classes based on the word's position. This enables you to style all the wrapped words the same, or to style first and last words differently from each other, or some mix thereof.
+
+## Testing the Script
+
+A [`_test.html`](/_test.html) is included herein. This is not meant to be used on your site. It's for testing changes to the script to make sure that it still works as intended in a variety of possible circumstances.
