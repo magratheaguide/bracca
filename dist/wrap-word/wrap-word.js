@@ -17,33 +17,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         constructor(index, wrapperClass) {
             this.index = index;
             this.wrapperClass = `${sharedWrapperClass} ${wrapperClass}`;
-        }
 
-        get isForwardSearching() {
-            return this._isForwardSearching;
-        }
-
-        get word() {
-            return this._word;
-        }
-
-        get wordWrapped() {
-            return this._wordWrapped;
-        }
-
-        configureWord(wordArray) {
-            if (this.index >= 0) {
-                this._word = wordArray[this.index];
-                this._isForwardSearching = true;
+            if (index >= 0) {
+                this.isForwardSearching = true;
             } else {
-                this._word = wordArray[wordArray.length + this.index];
-                this._isForwardSearching = false;
+                this.isForwardSearching = false;
             }
-            this._wordWrapped = this.wrapWord(this._word);
-        }
-
-        wrapWord(word) {
-            return `<span class="${this.wrapperClass}">${word}</span>`;
         }
     }
 
@@ -59,49 +38,62 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     };
 
     for (const target of targets) {
-        const viewableContent = target.innerText;
+        const selectedModes = target.dataset[triggerJs].trim().split(/\s+/);
+
+        for (const selectedMode of selectedModes) {
+            if (modes.hasOwnProperty(selectedMode)) {
+                const mode = modes[selectedMode];
+                const word = getWord(target, mode);
+                const wordWrapped = wrapWord(word, mode);
+                const textNode = getContainingTextNode(
+                    target,
+                    word,
+                    mode.isForwardSearching
+                );
+
+                injectWrapper(
+                    textNode,
+                    word,
+                    wordWrapped,
+                    mode.isForwardSearching
+                );
+            } else if (selectedMode === "") {
+                console.error(
+                    `Found empty trigger on %o
+At least one mode must be specified, options are: %o`,
+                    target,
+                    Object.keys(modes)
+                );
+            } else {
+                console.error('Unsupported mode "%s" found', selectedMode);
+            }
+        }
+    }
+
+    function getWord(parent, mode) {
+        const viewableContent = parent.innerText;
 
         if (/\S/.test(viewableContent)) {
-            const allWords = viewableContent.trim().split(/\s+/);
-            const selectedModes = target.dataset[triggerJs].trim().split(/\s+/);
+            const words = viewableContent.trim().split(/\s+/);
 
-            for (const selectedMode of selectedModes) {
-                if (modes.hasOwnProperty(selectedMode)) {
-                    let mode = modes[selectedMode];
-
-                    mode.configureWord(allWords);
-
-                    let node = findContainingNode(
-                        target,
-                        mode.word,
-                        mode.isForwardSearching
-                    );
-                    injectWrapper(
-                        node,
-                        mode.word,
-                        mode.wordWrapped,
-                        mode.isForwardSearching
-                    );
-                } else if (selectedMode === "") {
-                    console.error(
-                        `Found empty trigger on %o
-At least one mode must be specified, options are: %o`,
-                        target,
-                        Object.keys(modes)
-                    );
-                } else {
-                    console.error('Unsupported mode "%s" found', selectedMode);
-                }
+            if (mode.isForwardSearching) {
+                return words[mode.index];
+            } else {
+                return words[words.length + mode.index];
             }
         } else {
             console.warn(
                 "No visible, non-whitespace content in targeted element %o",
-                target
+                parent
             );
         }
     }
 
-    function findContainingNode(parent, searchFor, isForwardSearching) {
+    function wrapWord(word, mode) {
+        return `<span class="${mode.wrapperClass}">${word}</span>`;
+    }
+
+    function getContainingTextNode(parent, searchFor, isForwardSearching) {
         let childNodes = Array.from(parent.childNodes);
 
         if (!isForwardSearching) {
@@ -119,7 +111,11 @@ At least one mode must be specified, options are: %o`,
                 if (child.nodeName === "#text") {
                     return child;
                 } else {
-                    return findContainingNode(child, searchFor);
+                    return getContainingTextNode(
+                        child,
+                        searchFor,
+                        isForwardSearching
+                    );
                 }
             }
         }
