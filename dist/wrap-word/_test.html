@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+
+        <title>Test Word Wrap</title>
+
+        <script src="wrap-word.js" defer></script>
+
+        <style type="text/css">
+            .js-wrapped-word {
+                border: 1px solid;
+            }
+
+            .js-wrapped-word.--first-word {
+                color: teal;
+            }
+
+            .js-wrapped-word.--last-word {
+                color: orchid;
+            }
+        </style>
+    </head>
+    <body>
+        <span data-trigger-word-wrap="first last">Contains text only</span>
+
+        <span data-trigger-word-wrap="first last"
+            >"Contains start and end punctuation."</span
+        >
+
+        <span data-trigger-word-wrap="first last"
+            >Contains <i>sibling</i> elements</span
+        >
+
+        <div data-trigger-word-wrap="first last">Contains extra whitespace</div>
+
+        <div data-trigger-word-wrap="first">First word only</div>
+
+        <div data-trigger-word-wrap="last">Last word only</div>
+
+        <div class="other-class">Negative case. Do not wrap.</div>
+
+        <div data-trigger-word-wrap>Missing position. Do not wrap.</div>
+
+        <div data-trigger-word-wrap="first last">
+            <!-- starting distraction! -->
+            Leading and trailing comments
+            <!-- ending distraction! -->
+        </div>
+
+        <div data-trigger-word-wrap="first last">
+            <style type="text/css">
+                .distraction-start {
+                    background: red;
+                }
+            </style>
+            Leading and trailing styles
+            <style type="text/css">
+                .distraction-end {
+                    background: red;
+                }
+            </style>
+        </div>
+
+        <div data-trigger-word-wrap="first last">
+            <b>Content fully contained in nested element</b>
+        </div>
+
+        <div data-trigger-word-wrap="first last">
+            <b>Content partially</b> contained in <b>nested elements</b>
+        </div>
+
+        <div data-trigger-word-wrap="first last">
+            <style type="text/css">
+                .distraction-start {
+                    background: red;
+                }
+            </style>
+            <!-- starting distraction! -->
+            <b>"Nested styles, comments, and containing elements."</b>
+            <!-- ending distraction! -->
+            <style type="text/css">
+                .distraction-end {
+                    background: red;
+                }
+            </style>
+        </div>
+
+        <div data-trigger-word-wrap="first last">
+            <style type="text/css">
+                .distraction-start {
+                    background: red;
+                }
+            </style>
+            <!-- starting distraction! -->
+            Nested styles and comments. Bare text.
+            <!-- ending distraction! -->
+            <style type="text/css">
+                .distraction-end {
+                    background: red;
+                }
+            </style>
+        </div>
+
+        <!-- make sure we don't get caught up on repeated words -->
+        <div data-trigger-word-wrap="last">repeat repeat repeat</div>
+
+        <div data-trigger-word-wrap="first last">
+            <!-- Warning case, no content -->
+        </div>
+
+        <div data-trigger-word-wrap="first nope last">
+            Contains unsupported mode
+        </div>
+    </body>
+</html>
