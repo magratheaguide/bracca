@@ -39,4 +39,4 @@ Note that all word wrappers share a common class and then have additional modifi
 
 ## Testing the Script
 
-A [`_test.html`](/_test.html) is included herein. This is not meant to be used on your site. It's for testing changes to the script to make sure that it still works as intended in a variety of possible circumstances.
+A [`_test.html`](_test.html) is included herein. This is not meant to be used on your site. It's for testing changes to the script to make sure that it still works as intended in a variety of possible circumstances.
