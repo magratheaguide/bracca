@@ -43,20 +43,25 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         for (const selectedMode of selectedModes) {
             if (modes.hasOwnProperty(selectedMode)) {
                 const mode = modes[selectedMode];
-                const word = getWord(target, mode);
-                const wordWrapped = wrapWord(word, mode);
-                const textNode = getContainingTextNode(
-                    target,
-                    word,
-                    mode.isForwardSearching
-                );
 
-                injectWrapper(
-                    textNode,
-                    word,
-                    wordWrapped,
-                    mode.isForwardSearching
-                );
+                try {
+                    const word = getWord(target, mode);
+                    const wordWrapped = wrapWord(word, mode);
+                    const textNode = getContainingTextNode(
+                        target,
+                        word,
+                        mode.isForwardSearching
+                    );
+
+                    injectWrapper(
+                        textNode,
+                        word,
+                        wordWrapped,
+                        mode.isForwardSearching
+                    );
+                } catch (error) {
+                    console.error(error);
+                }
             } else if (selectedMode === "") {
                 console.error(
                     `Found empty trigger on %o
@@ -72,21 +77,30 @@ At least one mode must be specified, options are: %o`,
 
     function getWord(parent, mode) {
         const viewableContent = parent.innerText;
+        let word;
 
         if (/\S/.test(viewableContent)) {
             const words = viewableContent.trim().split(/\s+/);
 
             if (mode.isForwardSearching) {
-                return words[mode.index];
+                word = words[mode.index];
             } else {
-                return words[words.length + mode.index];
+                word = words[words.length + mode.index];
             }
         } else {
-            console.warn(
+            console.error(
                 "No visible, non-whitespace content in targeted element %o",
                 parent
             );
+            throw "getWord() failed";
         }
+
+        if (!word) {
+            console.error("Word could not be retrieved from %o", parent);
+            throw "getWord() failed";
+        }
+
+        return word;
     }
 
     function wrapWord(word, mode) {
@@ -101,7 +115,7 @@ At least one mode must be specified, options are: %o`,
         }
 
         for (const child of childNodes) {
-            const searchForRegExp = new RegExp(searchFor);
+            const searchForRegExp = new RegExp(searchFor, "i");
 
             if (
                 searchForRegExp.test(child.nodeValue) ||
@@ -129,16 +143,18 @@ At least one mode must be specified, options are: %o`,
         https://stackoverflow.com/questions/16662393/insert-html-into-text-node-with-javascript#29301739
         */
 
+        let lowerWord = word.toLowerCase();
+        let wordRegExp = new RegExp(word, "i");
         let newNodeValue;
 
         if (isForwardSearching) {
-            newNodeValue = node.nodeValue.replace(word, wordWrapped);
+            newNodeValue = node.nodeValue.replace(wordRegExp, wordWrapped);
         } else {
-            const index = node.nodeValue.lastIndexOf(word);
+            const index = node.nodeValue.toLowerCase().lastIndexOf(lowerWord);
             const valueStart = node.nodeValue.substring(0, index);
             let valueEnd = node.nodeValue.substring(index);
 
-            valueEnd = valueEnd.replace(word, wordWrapped);
+            valueEnd = valueEnd.replace(wordRegExp, wordWrapped);
             newNodeValue = valueStart + valueEnd;
         }
 

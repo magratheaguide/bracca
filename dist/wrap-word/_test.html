@@ -19,6 +19,10 @@
             .js-wrapped-word.--last-word {
                 color: orchid;
             }
+
+            .test-text-transform {
+                text-transform: uppercase;
+            }
         </style>
     </head>
     <body>
@@ -111,6 +115,10 @@
 
         <div data-trigger-word-wrap="first nope last">
             Contains unsupported mode
+        </div>
+
+        <div class="test-text-transform" data-trigger-word-wrap="first last">
+            Style changes word case
         </div>
     </body>
 </html>
