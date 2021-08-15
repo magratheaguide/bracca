@@ -7,3 +7,5 @@
 A collection of random little utility scripts useful in Jcink and other forum custom themes, brought to you by [Coding Camp](https://coding-camp.tumblr.com).
 
 For information on what each script does and how to use it, see the README file in its directory within [`dist`](/dist).
+
+Scripts that can be used more broadly can be found in [`dist`](/dist). Scripts only meant to work with a specific forum host, will be an sub-directory with a matching name. For example, the `move-recent-topics.js` script is specific to Jcink, and can therefore be found at [`dist/jcink/move-recent-topics/`](/dist/jcink/move-recent-topics).
