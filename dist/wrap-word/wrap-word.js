@@ -1,8 +1,8 @@
 /*
 MIT License
 
-Modified work copyright (c) 2021 Coding Camp and other contributors
-Original work copyright (c) 2021 by Mario Vidov (https://codepen.io/mel/pen/jLEKH)
+Modified work copyright (c) 2021 Coding Camp.
+Original work copyright (c) 2021 by Mario Vidov (https://codepen.io/mel/pen/jLEKH).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -13,32 +13,36 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 "use strict";
 
 (function () {
-    class Mode {
-        constructor(index, wrapperClass) {
-            this.index = index;
-            this.wrapperClass = `${sharedWrapperClass} ${wrapperClass}`;
+    // these must match each other!
+    const triggerSelector = "[data-js-trigger-word-wrap]";
+    const triggerKey = "jsTriggerWordWrap";
 
-            if (index >= 0) {
-                this.isForwardSearching = true;
-            } else {
-                this.isForwardSearching = false;
-            }
+    // supported modes of operation
+    const modes = {
+        first: {
+            index: 0,
+            position: "first",
+        },
+        last: {
+            index: -1,
+            position: "last",
+        },
+    };
+
+    for (const key in modes) {
+        let mode = modes[key];
+
+        if (mode.index >= 0) {
+            mode.isForwardSearching = true;
+        } else {
+            mode.isForwardSearching = false;
         }
     }
 
-    const triggerSelector = "[data-trigger-word-wrap]";
-    const triggerJs = "triggerWordWrap";
-
     const targets = document.querySelectorAll(triggerSelector);
 
-    const sharedWrapperClass = "js-wrapped-word";
-    const modes = {
-        first: new Mode(0, "--first-word"),
-        last: new Mode(-1, "--last-word"),
-    };
-
     for (const target of targets) {
-        const selectedModes = target.dataset[triggerJs].trim().split(/\s+/);
+        const selectedModes = target.dataset[triggerKey].trim().split(/\s+/);
 
         for (const selectedMode of selectedModes) {
             if (modes.hasOwnProperty(selectedMode)) {
@@ -59,8 +63,20 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                         wordWrapped,
                         mode.isForwardSearching
                     );
-                } catch (error) {
-                    console.error(error);
+                } catch (exception) {
+                    switch (exception.level) {
+                        case "warn":
+                            console.warn(
+                                exception.message,
+                                ...exception.substitutions
+                            );
+                            break;
+                        default:
+                            console.error(
+                                exception.message,
+                                ...exception.substitutions
+                            );
+                    }
                 }
             } else if (selectedMode === "") {
                 console.error(
@@ -88,23 +104,27 @@ At least one mode must be specified, options are: %o`,
                 word = words[words.length + mode.index];
             }
         } else {
-            console.error(
-                "No visible, non-whitespace content in targeted element %o",
-                parent
-            );
-            throw "getWord() failed";
+            throw {
+                level: "warn",
+                message:
+                    "No visible, non-whitespace content in targeted element %o",
+                substitutions: [parent],
+            };
         }
 
         if (!word) {
-            console.error("Word could not be retrieved from %o", parent);
-            throw "getWord() failed";
+            throw {
+                level: "error",
+                message: "Word could not be retrieved from %o",
+                substitutions: [parent],
+            };
         }
 
         return word;
     }
 
     function wrapWord(word, mode) {
-        return `<span class="${mode.wrapperClass}">${word}</span>`;
+        return `<span class="js-wrapped-word" data-word="${mode.position}">${word}</span>`;
     }
 
     function getContainingTextNode(parent, searchFor, isForwardSearching) {

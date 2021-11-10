@@ -12,11 +12,11 @@
                 border: 1px solid;
             }
 
-            .js-wrapped-word.--first-word {
+            .js-wrapped-word[data-word="first"] {
                 color: teal;
             }
 
-            .js-wrapped-word.--last-word {
+            .js-wrapped-word[data-word="last"] {
                 color: orchid;
             }
         </style>
@@ -24,29 +24,31 @@
     <body>
         <h2>Positive Tests</h2>
 
-        <span data-trigger-word-wrap="first last">Contains text only</span>
+        <span data-js-trigger-word-wrap="first last">Contains text only</span>
 
-        <span data-trigger-word-wrap="first last"
+        <span data-js-trigger-word-wrap="first last"
             >"Contains start and end punctuation."</span
         >
 
-        <span data-trigger-word-wrap="first last"
+        <span data-js-trigger-word-wrap="first last"
             >Contains <i>sibling</i> elements</span
         >
 
-        <div data-trigger-word-wrap="first last">Contains extra whitespace</div>
+        <div data-js-trigger-word-wrap="first last">
+            Contains extra whitespace
+        </div>
 
-        <div data-trigger-word-wrap="first">First word only</div>
+        <div data-js-trigger-word-wrap="first">First word only</div>
 
-        <div data-trigger-word-wrap="last">Last word only</div>
+        <div data-js-trigger-word-wrap="last">Last word only</div>
 
-        <div data-trigger-word-wrap="first last">
+        <div data-js-trigger-word-wrap="first last">
             <!-- starting distraction! -->
             Leading and trailing comments
             <!-- ending distraction! -->
         </div>
 
-        <div data-trigger-word-wrap="first last">
+        <div data-js-trigger-word-wrap="first last">
             <style type="text/css">
                 .distraction-start {
                     background: red;
@@ -60,15 +62,15 @@
             </style>
         </div>
 
-        <div data-trigger-word-wrap="first last">
+        <div data-js-trigger-word-wrap="first last">
             <b>Content fully contained in nested element</b>
         </div>
 
-        <div data-trigger-word-wrap="first last">
+        <div data-js-trigger-word-wrap="first last">
             <b>Content partially</b> contained in <b>nested elements</b>
         </div>
 
-        <div data-trigger-word-wrap="first last">
+        <div data-js-trigger-word-wrap="first last">
             <style type="text/css">
                 .distraction-start {
                     background: red;
@@ -84,7 +86,7 @@
             </style>
         </div>
 
-        <div data-trigger-word-wrap="first last">
+        <div data-js-trigger-word-wrap="first last">
             <style type="text/css">
                 .distraction-start {
                     background: red;
@@ -101,14 +103,14 @@
         </div>
 
         <!-- make sure we don't get caught up on repeated words -->
-        <div data-trigger-word-wrap="last">repeat repeat repeat</div>
+        <div data-js-trigger-word-wrap="last">repeat repeat repeat</div>
 
         <style type="text/css">
             .test-text-transform {
                 text-transform: uppercase;
             }
         </style>
-        <div class="test-text-transform" data-trigger-word-wrap="first last">
+        <div class="test-text-transform" data-js-trigger-word-wrap="first last">
             Style changes word case
         </div>
 
@@ -116,14 +118,14 @@
 
         <div class="other-class">Negative case. Do not wrap.</div>
 
-        <div data-trigger-word-wrap>Missing position. Do not wrap.</div>
+        <div data-js-trigger-word-wrap>Missing position. Do not wrap.</div>
 
-        <div data-trigger-word-wrap="first last">
+        <div data-js-trigger-word-wrap="first last">
             <!-- Warning case, no content -->
         </div>
 
-        <div data-trigger-word-wrap="first nope last">
-            Contains unsupported mode
+        <div data-js-trigger-word-wrap="first nope last">
+            Contains unsupported mode. Supported modes should still work.
         </div>
     </body>
 </html>

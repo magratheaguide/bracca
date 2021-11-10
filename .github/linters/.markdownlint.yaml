@@ -1,0 +1,6 @@
+---
+default: true
+
+MD007:
+    indent: 4 # Unordered list indentation
+MD013: false # Line length limit

@@ -1,22 +1,22 @@
+"use strict";
+
 (function () {
-    const RECENT_TOPICS_PARENT_ID = "js-recent-topics-parent";
+    const parentId = "js-recent-topics-parent";
 
-    const RECENT_TOPICS = document.getElementById("recent-topics");
-    const RECENT_TOPICS_PARENT = document.getElementById(
-        RECENT_TOPICS_PARENT_ID
-    );
+    const recentTopics = document.getElementById("recent-topics");
+    const parent = document.getElementById(parentId);
 
-    if (!RECENT_TOPICS) {
+    if (!recentTopics) {
         console.error("#recent-topics could not be found");
     }
 
-    if (!RECENT_TOPICS_PARENT) {
+    if (!parent) {
         console.error(
-            `New recent topics parent could not be found, expected element with ID ${RECENT_TOPICS_PARENT_ID}`
+            `New parent for recent topics could not be found, expected element with ID ${parentId}`
         );
     }
 
-    if (RECENT_TOPICS && RECENT_TOPICS_PARENT) {
-        RECENT_TOPICS_PARENT.appendChild(RECENT_TOPICS);
+    if (recentTopics && parent) {
+        parent.appendChild(recentTopics);
     }
 })();
