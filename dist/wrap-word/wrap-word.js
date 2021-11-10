@@ -61,8 +61,20 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                         wordWrapped,
                         mode.isForwardSearching
                     );
-                } catch (error) {
-                    console.error(error);
+                } catch (exception) {
+                    switch (exception.level) {
+                        case "warn":
+                            console.warn(
+                                exception.message,
+                                ...exception.substitutions
+                            );
+                            break;
+                        default:
+                            console.error(
+                                exception.message,
+                                ...exception.substitutions
+                            );
+                    }
                 }
             } else if (selectedMode === "") {
                 console.error(
@@ -90,16 +102,20 @@ At least one mode must be specified, options are: %o`,
                 word = words[words.length + mode.index];
             }
         } else {
-            console.error(
-                "No visible, non-whitespace content in targeted element %o",
-                parent
-            );
-            throw "getWord() failed";
+            throw {
+                level: "warn",
+                message:
+                    "No visible, non-whitespace content in targeted element %o",
+                substitutions: [parent],
+            };
         }
 
         if (!word) {
-            console.error("Word could not be retrieved from %o", parent);
-            throw "getWord() failed";
+            throw {
+                level: "error",
+                message: "Word could not be retrieved from %o",
+                substitutions: [parent],
+            };
         }
 
         return word;
