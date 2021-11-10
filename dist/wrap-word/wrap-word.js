@@ -14,9 +14,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 (function () {
     class Mode {
-        constructor(index, wrapperClass) {
+        constructor(index, position) {
             this.index = index;
-            this.wrapperClass = `${sharedWrapperClass} ${wrapperClass}`;
+            this.position = position;
+            this.sharedClass = "js-wrapped-word";
+            this.dataKey = "word";
 
             if (index >= 0) {
                 this.isForwardSearching = true;
@@ -26,19 +28,19 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         }
     }
 
-    const triggerSelector = "[data-trigger-word-wrap]";
-    const triggerJs = "triggerWordWrap";
+    // these must match each other!
+    const triggerSelector = "[data-js-trigger-word-wrap]";
+    const triggerKey = "jsTriggerWordWrap";
 
     const targets = document.querySelectorAll(triggerSelector);
 
-    const sharedWrapperClass = "js-wrapped-word";
     const modes = {
-        first: new Mode(0, "--first-word"),
-        last: new Mode(-1, "--last-word"),
+        first: new Mode(0, "first"),
+        last: new Mode(-1, "last"),
     };
 
     for (const target of targets) {
-        const selectedModes = target.dataset[triggerJs].trim().split(/\s+/);
+        const selectedModes = target.dataset[triggerKey].trim().split(/\s+/);
 
         for (const selectedMode of selectedModes) {
             if (modes.hasOwnProperty(selectedMode)) {
@@ -104,7 +106,7 @@ At least one mode must be specified, options are: %o`,
     }
 
     function wrapWord(word, mode) {
-        return `<span class="${mode.wrapperClass}">${word}</span>`;
+        return `<span class="${mode.sharedClass}" data-${mode.dataKey}="${mode.position}">${word}</span>`;
     }
 
     function getContainingTextNode(parent, searchFor, isForwardSearching) {
