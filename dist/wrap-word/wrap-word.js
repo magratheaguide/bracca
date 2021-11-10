@@ -13,31 +13,33 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 "use strict";
 
 (function () {
-    class Mode {
-        constructor(index, position) {
-            this.index = index;
-            this.position = position;
-            this.sharedClass = "js-wrapped-word";
-            this.dataKey = "word";
-
-            if (index >= 0) {
-                this.isForwardSearching = true;
-            } else {
-                this.isForwardSearching = false;
-            }
-        }
-    }
-
     // these must match each other!
     const triggerSelector = "[data-js-trigger-word-wrap]";
     const triggerKey = "jsTriggerWordWrap";
 
-    const targets = document.querySelectorAll(triggerSelector);
-
+    // supported modes of operation
     const modes = {
-        first: new Mode(0, "first"),
-        last: new Mode(-1, "last"),
+        first: {
+            index: 0,
+            position: "first",
+        },
+        last: {
+            index: -1,
+            position: "last",
+        },
     };
+
+    for (const key in modes) {
+        let mode = modes[key];
+
+        if (mode.index >= 0) {
+            mode.isForwardSearching = true;
+        } else {
+            mode.isForwardSearching = false;
+        }
+    }
+
+    const targets = document.querySelectorAll(triggerSelector);
 
     for (const target of targets) {
         const selectedModes = target.dataset[triggerKey].trim().split(/\s+/);
@@ -122,7 +124,7 @@ At least one mode must be specified, options are: %o`,
     }
 
     function wrapWord(word, mode) {
-        return `<span class="${mode.sharedClass}" data-${mode.dataKey}="${mode.position}">${word}</span>`;
+        return `<span class="js-wrapped-word" data-word="${mode.position}">${word}</span>`;
     }
 
     function getContainingTextNode(parent, searchFor, isForwardSearching) {
