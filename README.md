@@ -2,7 +2,7 @@
 
 A collection of random little utility scripts useful in Jcink and other forum custom themes.
 
-> Bracca is a junkyard planet known for ship salvage in _Star Wars Jedi: Fallen Order_.
+<aside>Bracca is a junkyard planet known for ship salvage in <i>Star Wars Jedi: Fallen Order</i>.</aside>
 
 For information on what each script does and how to use it, see the README file in its directory within [`dist`](/dist).
 
