@@ -6,7 +6,7 @@ Dynamically wrap a specific word within an element so that it can be individuall
 
 ## How to Use
 
-1. Load the script by adding `<script src="https://magrathea.guide/bracca/dist/wrap-word/wrap-word.js" defer></script>` to the site's HTML
+1. Load the script by adding `<script src="https://magrathea.guide/bracca/dist/wrap-word/index.js" defer></script>` to the site's HTML
     - We recommend that you add this script to the specific pages it'll be used on, as high up on that page as possible. Ideally, within the `<head>` tag. (Note that this script does **not** need to be placed just before the closing `</body>` tag [thanks to the `defer` keyword](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/What_is_JavaScript#script_loading_strategies).)
 1. Specify the parent elements containing words that should be wrapped by adding `data-js-trigger-word-wrap="first last"`, removing any modes that you do not want to use
     - For example, if you only want to wrap the last word, use `data-js-trigger-word-wrap="last"`
