@@ -29,14 +29,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         },
     };
 
-    for (const key in modes) {
-        let mode = modes[key];
-
-        if (mode.index >= 0) {
-            mode.isForwardSearching = true;
-        } else {
-            mode.isForwardSearching = false;
-        }
+    for (const mode of Object.values(modes)) {
+        mode.isForwardSearching = mode.index >= 0;
     }
 
     const targets = document.querySelectorAll(triggerSelector);
