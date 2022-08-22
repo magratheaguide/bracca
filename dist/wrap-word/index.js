@@ -54,27 +54,27 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                     const textNode = getContainingTextNode(
                         target,
                         word,
-                        mode.isForwardSearching
+                        mode.isForwardSearching,
                     );
 
                     injectWrapper(
                         textNode,
                         word,
                         wordWrapped,
-                        mode.isForwardSearching
+                        mode.isForwardSearching,
                     );
                 } catch (exception) {
                     switch (exception.level) {
                         case "warn":
                             console.warn(
                                 exception.message,
-                                ...exception.substitutions
+                                ...exception.substitutions,
                             );
                             break;
                         default:
                             console.error(
                                 exception.message,
-                                ...exception.substitutions
+                                ...exception.substitutions,
                             );
                     }
                 }
@@ -83,7 +83,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                     `Found empty trigger on %o
 At least one mode must be specified, options are: %o`,
                     target,
-                    Object.keys(modes)
+                    Object.keys(modes),
                 );
             } else {
                 console.error('Unsupported mode "%s" found', selectedMode);
@@ -148,7 +148,7 @@ At least one mode must be specified, options are: %o`,
                     return getContainingTextNode(
                         child,
                         searchFor,
-                        isForwardSearching
+                        isForwardSearching,
                     );
                 }
             }
