@@ -36,7 +36,7 @@ SOFTWARE.
 
     if (!parent) {
         console.error(
-            `New parent for recent topics could not be found, expected element with ID ${parentId}`
+            `New parent for recent topics could not be found, expected element with ID ${parentId}`,
         );
     }
 
